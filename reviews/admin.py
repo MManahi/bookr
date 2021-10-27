@@ -41,9 +41,6 @@ class ContributorAdmin(admin.ModelAdmin):
     # list attributes for admin panel
     list_display = ('last_names', 'first_names')
 
-    # def inialised_name(self, obj):
-    #     return "{}".format(obj.first_names[1].upper())
-
     # list filters for admin panel
     list_filter = ('last_names',)
 
