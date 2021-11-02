@@ -3,3 +3,17 @@ body {
     text-align: center;
     background-color: #f0f0f0;
 }
+
+.logo {
+    max-height: 100px;
+    margin-right: 10px
+}
+
+.navbar {
+    min-height: 100px;
+    font-size: 25px;
+}
+
+.navbar-brand {
+    font-size: 25px;
+}
