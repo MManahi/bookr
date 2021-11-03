@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from reviews.models import Book, Review, Contributor
 from reviews.utils import average_rating
-from reviews.forms import SearchForm
+from reviews.forms import SearchForm, OrderForm
 
 
 # http request in view to url mapper that shows name if the name was given in GET request
@@ -85,3 +85,17 @@ def book_search(request):
                 for book in contributor.book_set.all():
                     books.add(book)
     return render(request, "reviews/search-results.html", {"form": form, "search_text": search_text, "books": books})
+
+
+def order_book(request):
+    if request.method == "POST":
+        form = OrderForm(request.POST)
+    else:
+        form = OrderForm()
+    if request.method == "POST":
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            for name, value in form.cleaned_data.items():
+                print("{}: ({}) {}".format(name, type(value), value))
+
+    return render(request, "reviews/book-order.html", {"method": request.method, "form": form})

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h4>Method: {{ method }}</h4>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <p>
+            <input type="submit" name="submit_input" value="Submit Input">
+        </p>
+    </form>
+{% endblock %}
