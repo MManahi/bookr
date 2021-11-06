@@ -32,9 +32,9 @@ class OrderForm(forms.Form):
             self.add_error(None, "The total number of items must be 100 or less.")
 
     magazine_count = forms.IntegerField(min_value=0, max_value=80,
-                                        widget=forms.TextInput(attrs={"placeholder": "0"}))
+                                        widget=forms.NumberInput(attrs={"placeholder": "0"}))
     book_count = forms.IntegerField(min_value=0, max_value=50,
-                                    widget=forms.TextInput(attrs={"placeholder": "0"}))
+                                    widget=forms.NumberInput(attrs={"placeholder": "0"}))
     send_confirmation = forms.BooleanField(required=False)
     email = forms.EmailField(required=False, validators=[validate_email_domain],
                              widget=forms.EmailInput(attrs={"placeholder": "name@example.com"}))
