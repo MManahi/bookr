@@ -1,8 +1,12 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
-from reviews.models import Book, Review, Contributor
+from reviews.models import Book, Review, Contributor, Publisher
 from reviews.utils import average_rating
-from reviews.forms import SearchForm, OrderForm
+from reviews.forms import SearchForm, OrderForm, PublisherForm, ReviewForm
+from django.utils import timezone
+
+""" messages help to send a message after object is created or edited when using redirect """
+from django.contrib import messages
 
 
 # http request in view to url mapper that shows name if the name was given in GET request
@@ -90,12 +94,56 @@ def book_search(request):
 def order_book(request):
     if request.method == "POST":
         form = OrderForm(request.POST)
-    else:
-        form = OrderForm()
-    if request.method == "POST":
-        form = OrderForm(request.POST)
         if form.is_valid():
             for name, value in form.cleaned_data.items():
                 print("{}: ({}) {}".format(name, type(value), value))
-
+    else:
+        form = OrderForm()
     return render(request, "reviews/book-order.html", {"method": request.method, "form": form})
+
+
+def publisher_edit(request, pk=None):
+    if pk is not None:
+        publisher = get_object_or_404(Publisher, pk=pk)
+    else:
+        publisher = None
+    if request.method == "POST":
+        form = PublisherForm(request.POST, instance=publisher)
+        if form.is_valid():
+            updated_publisher = form.save()
+            if publisher is None:
+                messages.success(request, "Publisher \"{}\" was created.".format(updated_publisher))
+            else:
+                messages.success(request, "Publisher \"{}\" was updated.".format(updated_publisher))
+            return redirect("publisher_edit", updated_publisher.pk)
+    else:
+        form = PublisherForm(instance=publisher)
+    return render(request, "reviews/publisher_edit.html",
+                  {"method": request.method, "form": form, "instance": publisher,
+                   "model_type": "Publisher"})
+
+
+def review_edit(request, book_pk, review_pk=None):
+    book = get_object_or_404(Book, pk=book_pk)
+    if review_pk is not None:
+        review = get_object_or_404(Review, book_id=book_pk, pk=review_pk)
+    else:
+        review = None
+    if request.method == "POST":
+        form = ReviewForm(request.POST, instance=review)
+        if form.is_valid():
+            updated_review = form.save(commit=False)
+            updated_review.book = book
+            if review is None:
+                messages.success(request, "Review for \"{}\" was created.".format(book))
+            else:
+                updated_review.date_edited = timezone.now()
+                messages.success(request, "Review for \"{}\" was updated.".format(book))
+            updated_review.save()
+            return redirect("book_detail", book.pk)
+    else:
+        form = ReviewForm(instance=review)
+    return render(request, "reviews/review_edit.html",
+                  {"method": request.method, "form": form, "instance": review,
+                   "model_type": "Review", "related_instance": book,
+                   "related_model_type": "Book"})

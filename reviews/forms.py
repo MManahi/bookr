@@ -1,5 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from reviews.models import Publisher, Review
 
 
 class SearchForm(forms.Form):
@@ -32,9 +33,34 @@ class OrderForm(forms.Form):
             self.add_error(None, "The total number of items must be 100 or less.")
 
     magazine_count = forms.IntegerField(min_value=0, max_value=80,
-                                        widget=forms.NumberInput(attrs={"placeholder": "0"}))
+                                        widget=forms.NumberInput(
+                                            attrs={"placeholder": "0", "class": "form-control-md"}))
     book_count = forms.IntegerField(min_value=0, max_value=50,
-                                    widget=forms.NumberInput(attrs={"placeholder": "0"}))
+                                    widget=forms.NumberInput(attrs={"placeholder": "0", "class": "form-control-md"}))
     send_confirmation = forms.BooleanField(required=False)
     email = forms.EmailField(required=False, validators=[validate_email_domain],
-                             widget=forms.EmailInput(attrs={"placeholder": "name@example.com"}))
+                             widget=forms.EmailInput(
+                                 attrs={"placeholder": "name@example.com", "class": "form-control-md"}))
+
+
+# build model form for model publisher
+class PublisherForm(forms.ModelForm):
+    class Meta:
+        model = Publisher
+        # fields = "__all__" uses all fields of the model publisher
+        fields = ("name", "email", "website")
+        widgets = {"name": forms.TextInput(attrs={"placeholder": "publisher's name"}),
+                   "email": forms.EmailInput(attrs={"placeholder": "publisher's email"}),
+                   "website": forms.URLInput(attrs={"placeholder": "publisher's website"})
+                   }
+
+
+# build model form for model review
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        exclude = ["date_edited", "book"]
+        widgets = {"content": forms.TextInput(attrs={"placeholder": "review's content"}),
+                   "rating": forms.NumberInput(attrs={"placeholder": "review's rating"}),
+                   }
+    rating = forms.IntegerField(min_value=0, max_value=5)
