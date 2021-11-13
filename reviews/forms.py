@@ -11,11 +11,11 @@ class SearchForm(forms.Form):
 
 
 class OrderForm(forms.Form):
-
     # custom form validation using django exceptions
     def validate_email_domain(value):
         if value.split("@")[-1].lower() != "example.com":
-            raise ValidationError("The email address must be on the domain example.com.")
+            raise ValidationError(
+                "The email address must be on the domain example.com.")
 
     # custom clean method to retrieve email in loser case
     def clean_email(self):
@@ -25,12 +25,16 @@ class OrderForm(forms.Form):
     def clean(self):
         cleaned_data = super().clean()
         if cleaned_data["send_confirmation"] and not cleaned_data.get("email"):
-            self.add_error("email", "Please enter an email address to receive the confirmation message.")
+            self.add_error(
+                "email", "Please enter an email address to receive the confirmation message.")
         elif cleaned_data.get("email") and not cleaned_data["send_confirmation"]:
-            self.add_error("send_confirmation", "Please check this if you want to receive a confirmation email.")
-        item_total = cleaned_data.get("magazine_count", 0) + cleaned_data.get("book_count", 0)
+            self.add_error(
+                "send_confirmation", "Please check this if you want to receive a confirmation email.")
+        item_total = cleaned_data.get(
+            "magazine_count", 0) + cleaned_data.get("book_count", 0)
         if item_total > 100:
-            self.add_error(None, "The total number of items must be 100 or less.")
+            self.add_error(
+                None, "The total number of items must be 100 or less.")
 
     magazine_count = forms.IntegerField(min_value=0, max_value=80,
                                         widget=forms.NumberInput(
@@ -64,3 +68,7 @@ class ReviewForm(forms.ModelForm):
                    "rating": forms.NumberInput(attrs={"placeholder": "review's rating"}),
                    }
     rating = forms.IntegerField(min_value=0, max_value=5)
+
+# build file upload form
+class FileUploadForm(forms.Form):
+    file_upload = forms.FileField()

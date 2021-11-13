@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% include '_messages.html' %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ file_upload_form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+{% endblock %}

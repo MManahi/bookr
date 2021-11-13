@@ -19,13 +19,17 @@ Including another URLconf
 # custom admin site
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 import reviews.views
-
 
 urlpatterns = [
     # default admin site
-    #path('admin/', admin.site.urls),
-    #custom admin site
+    # path('admin/', admin.site.urls),
+    # custom admin site
     path('admin/', admin.site.urls),
     path('', include('reviews.urls'))
 ]
+# this set up is to run media serving in dev env using django internal server
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

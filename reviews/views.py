@@ -2,11 +2,18 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from reviews.models import Book, Review, Contributor, Publisher
 from reviews.utils import average_rating
-from reviews.forms import SearchForm, OrderForm, PublisherForm, ReviewForm
+from reviews.forms import SearchForm, OrderForm, PublisherForm, ReviewForm, FileUploadForm
 from django.utils import timezone
+
+""" settings and os modules are used to serve media file uploads"""
+from django.conf import settings
+import os
 
 """ messages help to send a message after object is created or edited when using redirect """
 from django.contrib import messages
+
+""" get file types using mime"""
+import mimetypes
 
 
 # http request in view to url mapper that shows name if the name was given in GET request
@@ -147,3 +154,30 @@ def review_edit(request, book_pk, review_pk=None):
                   {"method": request.method, "form": form, "instance": review,
                    "model_type": "Review", "related_instance": book,
                    "related_model_type": "Book"})
+
+
+# def media_serving(request):
+#     if request.method == "POST":
+#         save_path = os.path.join(settings.MEDIA_ROOT, request.FILES["file_upload"].name)
+#         with open(save_path, "wb") as output_file:
+#             for chunk in request.FILES["file_upload"].chunks():
+#                 output_file.write(chunk)
+#         messages.success(request, "File {} was uploaded successfully!".format(request.FILES["file_upload"].name))
+#     return render(request, "reviews/media_serving.html")
+
+
+def file_upload(request):
+    if request.method == "POST":
+        file_upload_form = FileUploadForm(request.POST, request.FILES)
+        if file_upload_form.is_valid():
+            save_path = os.path.join(settings.MEDIA_ROOT, request.FILES["file_upload"].name)
+            with open(save_path, "wb") as output_file:
+                for chunk in request.FILES["file_upload"].chunks():
+                    output_file.write(chunk)
+            messages.success(request,
+                             "File {} of type {} was uploaded successfully!"
+                             .format(request.FILES["file_upload"].name, mimetypes.guess_type(
+                                 'a_file.jpg')[0]))
+        else:
+            file_upload_form = FileUploadForm()
+        return render(request, "reviews/media_serving.html", {"file_upload_form": file_upload_form})

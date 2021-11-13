@@ -1,18 +1,13 @@
 {% block content %}
     <h2>
-        {% if instance %}
-            Editing {{ model_type }} <em>{{ instance }}</em>
-        {% else %}
-            New {{ model_type }}
-        {% endif %}
-        {% if related_instance and related_model_type %}
-            <p>For {{ related_model_type }} <em>{{ related_instance }}</
-                em></p>
-        {% endif %}
+        {% if instance %} Editing {{ model_type }} <em>{{ instance }}</em>
+        {% else %} New {{ model_type }} {% endif %} {% if related_instance and
+        related_model_type %}
+        <p>For {{ related_model_type }} <em>{{ related_instance }}</em></p>
+    {% endif %}
     </h2>
     <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
+        {% csrf_token %} {{ form.as_p }}
         <button type="submit" class="btn btn-primary">
             {% if instance %}Save{% else %}Create{% endif %}
         </button>
