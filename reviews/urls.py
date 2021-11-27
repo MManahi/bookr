@@ -15,5 +15,5 @@ urlpatterns = [path('welcome', views.welcome, name='welcome'),
                path('publisher/<int:pk>', views.publisher_edit, name="publisher_edit"),
                path('publisher/new', views.publisher_edit, name="publisher_create"),
                # path('media/', views.media_serving, name="media_serving")
-               path('media/', views.file_upload, name="media_serving")
+               path('media-serving/', views.file_upload, name="media_serving")
                ]

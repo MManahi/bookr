@@ -174,10 +174,7 @@ def file_upload(request):
             with open(save_path, "wb") as output_file:
                 for chunk in request.FILES["file_upload"].chunks():
                     output_file.write(chunk)
-            messages.success(request,
-                             "File {} of type {} was uploaded successfully!"
-                             .format(request.FILES["file_upload"].name, mimetypes.guess_type(
-                                 'a_file.jpg')[0]))
-        else:
-            file_upload_form = FileUploadForm()
-        return render(request, "reviews/media_serving.html", {"file_upload_form": file_upload_form})
+            messages.success(request, "File {} was uploaded successfully!".format(request.FILES["file_upload"].name))
+    else:
+        file_upload_form = FileUploadForm()
+    return render(request, "reviews/media_serving.html", {"file_upload_form": file_upload_form})
