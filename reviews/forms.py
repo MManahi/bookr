@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from reviews.models import Publisher, Review
+from reviews.models import Publisher, Review, Media
 
 
 class SearchForm(forms.Form):
@@ -17,7 +17,7 @@ class OrderForm(forms.Form):
             raise ValidationError(
                 "The email address must be on the domain example.com.")
 
-    # custom clean method to retrieve email in loser case
+    # custom clean method to retrieve email in lower case
     def clean_email(self):
         return self.cleaned_data['email'].lower()
 
@@ -67,8 +67,21 @@ class ReviewForm(forms.ModelForm):
         widgets = {"content": forms.TextInput(attrs={"placeholder": "review's content"}),
                    "rating": forms.NumberInput(attrs={"placeholder": "review's rating"}),
                    }
+
     rating = forms.IntegerField(min_value=0, max_value=5)
+
 
 # build file upload form
 class FileUploadForm(forms.Form):
-    file_upload = forms.FileField()
+    # file_upload = forms.FileField()
+    file_upload = forms.ImageField()
+
+
+# build model form for model media
+class MediaForm(forms.ModelForm):
+    class Meta:
+        model = Media
+        fields = '__all__'
+
+    image_field = forms.ImageField(required=False)
+    file_field = forms.FileField(required=False)

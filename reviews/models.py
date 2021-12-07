@@ -61,3 +61,8 @@ class Review(models.Model):
 
     def __str__(self):
         return self.content
+
+
+class Media(models.Model):
+    image_field = models.ImageField(upload_to="images/")
+    file_field = models.FileField(upload_to="files/")

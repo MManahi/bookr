@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
-from reviews.models import Book, Review, Contributor, Publisher
-from reviews.utils import average_rating
-from reviews.forms import SearchForm, OrderForm, PublisherForm, ReviewForm, FileUploadForm
+from reviews.models import Book, Review, Contributor, Publisher, Media
+from reviews.utils import average_rating, image_transformation
+from reviews.forms import SearchForm, OrderForm, PublisherForm, ReviewForm, FileUploadForm, MediaForm
 from django.utils import timezone
 
 """ settings and os modules are used to serve media file uploads"""
@@ -174,7 +174,20 @@ def file_upload(request):
             with open(save_path, "wb") as output_file:
                 for chunk in request.FILES["file_upload"].chunks():
                     output_file.write(chunk)
+            # image_transformation(request.FILES["file_upload"], save_path)
             messages.success(request, "File {} was uploaded successfully!".format(request.FILES["file_upload"].name))
     else:
         file_upload_form = FileUploadForm()
     return render(request, "reviews/media_serving.html", {"file_upload_form": file_upload_form})
+
+
+def media_edit(request):
+    instance = None
+    if request.method == "POST":
+        form = MediaForm(request.POST, request.FILES)
+        if form.is_valid():
+            instance = form.save()
+        messages.success(request, "File(s) uploaded successfully!")
+    else:
+        form = MediaForm()
+    return render(request, "reviews/media_form.html", {"form": form, "instance": instance})

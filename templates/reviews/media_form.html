@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% include '_messages.html' %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+    {% if instance.image_field %}
+        <img class="img-fluid" src="{{ instance.image_field.url }}">
+    {% endif %}
+{% endblock %}
