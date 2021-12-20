@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from reviews.models import Publisher, Review, Media
+from reviews.models import Publisher, Review, Media, Book
 
 
 class SearchForm(forms.Form):
@@ -85,3 +85,12 @@ class MediaForm(forms.ModelForm):
 
     image_field = forms.ImageField(required=False)
     file_field = forms.FileField(required=False)
+
+
+class BookMediaForm(forms.ModelForm):
+    class Meta:
+        model = Book
+        fields = ("cover", "sample")
+
+    cover = forms.ImageField(required=False)
+    sample = forms.FileField(required=False)
