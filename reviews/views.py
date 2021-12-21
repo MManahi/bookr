@@ -36,7 +36,7 @@ def index(request):
 
 def search(request):
     search_query = request.GET.get("search" or "")
-    return render(request, '../templates/reviews/search-results.html', {'search_query': search_query})
+    return render(request, '../templates/reviews/search_results.html', {'search_query': search_query})
 
 
 def welcome(request):
@@ -98,7 +98,7 @@ def book_search(request):
             for contributor in lname_contributors:
                 for book in contributor.book_set.all():
                     books.add(book)
-    return render(request, "reviews/search-results.html", {"form": form, "search_text": search_text, "books": books})
+    return render(request, "reviews/search_results.html", {"form": form, "search_text": search_text, "books": books})
 
 
 def order_book(request):
@@ -109,7 +109,7 @@ def order_book(request):
                 print("{}: ({}) {}".format(name, type(value), value))
     else:
         form = OrderForm()
-    return render(request, "reviews/book-order.html", {"method": request.method, "form": form})
+    return render(request, "reviews/book_order.html", {"method": request.method, "form": form})
 
 
 def publisher_edit(request, pk=None):
