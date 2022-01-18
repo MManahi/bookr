@@ -8,14 +8,14 @@ from PIL import Image
 from io import BytesIO
 from django.core.files.images import ImageFile
 
-""" settings and os modules are used to serve media file uploads"""
+""" settings and os modules are used to serve media file uploads """
 from django.conf import settings
 import os
 
 """ messages help to send a message after object is created or edited when using redirect """
 from django.contrib import messages
 
-""" get file types using mime"""
+""" get file types using mime """
 import mimetypes
 
 
